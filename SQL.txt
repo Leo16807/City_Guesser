@@ -1,0 +1,340 @@
+-- SQL Befehle für die Datenbank
+CREATE EXTENSION IF NOT EXISTS postgis;
+
+CREATE TABLE game_history (
+    id SERIAL PRIMARY KEY,
+    game_mode VARCHAR(100),
+    score INT NOT NULL,
+    rounds INT NOT NULL,
+    played_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+Create table players(
+    id SERIAL Primary Key,
+    name VARCHAR(20),
+    played_games INT
+);
+
+Alter table game_history 
+    add column player INT, 
+    add constraint player_fk
+    FOREIGN KEY (player)
+    REFERENCES players(id);
+
+CREATE TABLE cities (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    latitude DOUBLE PRECISION NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL,
+    info TEXT,
+    difficulty VARCHAR(20) DEFAULT 'medium',
+    clue TEXT
+);
+
+INSERT INTO cities (name, latitude, longitude, info, difficulty, clue) VALUES
+('Berlin', 52.5200, 13.4050, 'Hauptstadt von Deutschland.', 'easy', 'Stadt des Brandenburger Tors und der Mauer.'),
+('London', 51.5074, -0.1278, 'Hauptstadt von Großbritannien.', 'easy', 'Hier stehen Big Ben und der Buckingham Palace.'),
+('Paris', 48.8566, 2.3522, 'Hauptstadt von Frankreich.', 'easy', 'Stadt der Liebe und des Eiffelturms.'),
+('Rom', 41.9028, 12.4964, 'Hauptstadt von Italien.', 'easy', 'Die Ewige Stadt mit dem Kolosseum.'),
+('New York City', 40.7128, -74.0060, 'Größte Stadt der USA.', 'easy', 'Der Big Apple, Heimat der Freiheitsstatue.'),
+('Tokio', 35.6762, 139.6503, 'Hauptstadt von Japan.', 'easy', 'Größte Metropolregion der Welt, bekannt für Neonlichter.'),
+('Sydney', -33.8688, 151.2093, 'Größte Stadt Australiens.', 'easy', 'Bekannt für das Opernhaus und die Harbour Bridge.'),
+('Rio de Janeiro', -22.9068, -43.1729, 'Metropole in Brasilien.', 'easy', 'Stadt des Karnevals und der Christusstatue.'),
+('Moskau', 55.7558, 37.6173, 'Hauptstadt von Russland.', 'easy', 'Hier stehen der Kreml und der Rote Platz.'),
+('Kairo', 30.0444, 31.2357, 'Hauptstadt von Ägypten.', 'easy', 'Größte Stadt am Nil, nahe den Pyramiden.'),
+('Peking', 39.9042, 116.4074, 'Hauptstadt von China.', 'easy', 'Stadt der Verbotenen Stadt.'),
+('Los Angeles', 34.0522, -118.2437, 'Stadt in Kalifornien, USA.', 'easy', 'Heimat von Hollywood und Venice Beach.'),
+('Dubai', 25.2048, 55.2708, 'Stadt in den VAE.', 'easy', 'Heimat des höchsten Gebäudes der Welt (Burj Khalifa).'),
+('Amsterdam', 52.3676, 4.9041, 'Hauptstadt der Niederlande.', 'easy', 'Stadt der Grachten und Fahrräder.'),
+('Istanbul', 41.0082, 28.9784, 'Metropole in der Türkei.', 'easy', 'Einzige Stadt der Welt auf zwei Kontinenten.'),
+('Bangkok', 13.7563, 100.5018, 'Hauptstadt von Thailand.', 'easy', 'Pulsierende Stadt bekannt für Straßenessen und Tempel.'),
+('Athen', 37.9838, 23.7275, 'Hauptstadt von Griechenland.', 'easy', 'Antike Stadt mit der Akropolis.'),
+('Wien', 48.2082, 16.3738, 'Hauptstadt von Österreich.', 'easy', 'Stadt der Musik, Kaffeehäuser und Sissi.'),
+('Madrid', 40.4168, -3.7038, 'Hauptstadt von Spanien.', 'easy', 'Königliche Stadt im Herzen Spaniens.'),
+('Venedig', 45.4408, 12.3155, 'Stadt in Italien.', 'easy', 'Die Lagunenstadt mit Gondeln statt Autos.');
+
+INSERT INTO cities (name, latitude, longitude, info, difficulty, clue) VALUES
+('München', 48.1351, 11.5820, 'Stadt in Süddeutschland.', 'medium', 'Heimat des Oktoberfests und von BMW.'),
+('Hamburg', 53.5488, 9.9872, 'Hafenstadt in Deutschland.', 'medium', 'Deutschlands Tor zur Welt mit der Elbphilharmonie.'),
+('Barcelona', 41.3851, 2.1734, 'Stadt in Spanien.', 'medium', 'Katalanische Metropole mit der Sagrada Familia.'),
+('Mailand', 45.4642, 9.1900, 'Stadt in Norditalien.', 'medium', 'Modehauptstadt Italiens mit großem Dom.'),
+('Chicago', 41.8781, -87.6298, 'Stadt in den USA.', 'medium', 'Die Windy City am Michigansee.'),
+('San Francisco', 37.7749, -122.4194, 'Stadt in Kalifornien.', 'medium', 'Bekannt für die Golden Gate Bridge und steile Straßen.'),
+('Toronto', 43.6510, -79.3470, 'Größte Stadt Kanadas.', 'medium', 'Metropole am Ontariosee mit dem CN Tower.'),
+('Buenos Aires', -34.6037, -58.3816, 'Hauptstadt von Argentinien.', 'medium', 'Geburtsort des Tangos.'),
+('Kapstadt', -33.9249, 18.4241, 'Stadt in Südafrika.', 'medium', 'Stadt am Fuße des Tafelbergs.'),
+('Seoul', 37.5665, 126.9780, 'Hauptstadt von Südkorea.', 'medium', 'High-Tech Metropole und Heimat von K-Pop.'),
+('Mumbai', 19.0760, 72.8777, 'Stadt in Indien.', 'medium', 'Finanzzentrum Indiens und Heimat von Bollywood.'),
+('Singapur', 1.3521, 103.8198, 'Stadtstaat in Asien.', 'medium', 'Moderner Stadtstaat, bekannt für Sauberkeit.'),
+('Stockholm', 59.3293, 18.0686, 'Hauptstadt von Schweden.', 'medium', 'Stadt verteilt auf 14 Inseln.'),
+('Lissabon', 38.7223, -9.1393, 'Hauptstadt von Portugal.', 'medium', 'Stadt der sieben Hügel an der Tejo-Mündung.'),
+('Prag', 50.0755, 14.4378, 'Hauptstadt von Tschechien.', 'medium', 'Die Goldene Stadt mit der Karlsbrücke.'),
+('Budapest', 47.4979, 19.0402, 'Hauptstadt von Ungarn.', 'medium', 'Perle an der Donau mit beeindruckendem Parlament.'),
+('Warschau', 52.2297, 21.0122, 'Hauptstadt von Polen.', 'medium', 'Wurde nach dem 2. Weltkrieg fast komplett wiederaufgebaut.'),
+('Dublin', 53.3498, -6.2603, 'Hauptstadt von Irland.', 'medium', 'Heimat von Guinness und St. Patrick.'),
+('Melbourne', -37.8136, 144.9631, 'Stadt in Australien.', 'medium', 'Kulturhauptstadt Australiens, bekannt für Kaffee und Tennis.'),
+('Zürich', 47.3769, 8.5417, 'Stadt in der Schweiz.', 'medium', 'Finanzzentrum am See, nicht die Hauptstadt.');
+
+INSERT INTO cities (name, latitude, longitude, info, difficulty, clue) VALUES
+('Ulaanbaatar', 47.9184, 106.9177, 'Hauptstadt der Mongolei.', 'hard', 'Die kälteste Hauptstadt der Welt.'),
+('Nuuk', 64.1814, -51.6941, 'Hauptstadt von Grönland.', 'hard', 'Eine sehr nördliche Hauptstadt auf der größten Insel der Welt.'),
+('La Paz', -16.5000, -68.1500, 'Regierungssitz von Bolivien.', 'hard', 'Die höchstgelegene Großstadt der Welt.'),
+('Reykjavik', 64.1466, -21.9426, 'Hauptstadt von Island.', 'hard', 'Die am nördlichsten gelegene Hauptstadt eines Staates.'),
+('Wellington', -41.2865, 174.7762, 'Hauptstadt von Neuseeland.', 'hard', 'Die südlichste Hauptstadt der Welt.'),
+('Antananarivo', -18.8792, 47.5079, 'Hauptstadt von Madagaskar.', 'hard', 'Hauptstadt auf einer riesigen Insel vor Afrika.'),
+('Kathmandu', 27.7172, 85.3240, 'Hauptstadt von Nepal.', 'hard', 'Das Tor zum Himalaya.'),
+('Lhasa', 29.6548, 91.1172, 'Stadt in Tibet (China).', 'hard', 'Historische Hauptstadt des Buddhismus, sehr hoch gelegen.'),
+('Perth', -31.9505, 115.8605, 'Stadt in Westaustralien.', 'hard', 'Gilt als eine der einsamsten Großstädte der Welt.'),
+('Wladiwostok', 43.1198, 131.8869, 'Stadt in Russland.', 'hard', 'Endstation der Transsibirischen Eisenbahn am Pazifik.'),
+('Anchorage', 61.2181, -149.9003, 'Stadt in Alaska, USA.', 'hard', 'Größte Stadt im nördlichsten US-Bundesstaat.'),
+('Ushuaia', -54.8019, -68.3030, 'Stadt in Argentinien.', 'hard', 'Gilt oft als südlichste Stadt der Welt ("Ende der Welt").'),
+('Manaus', -3.1190, -60.0217, 'Stadt in Brasilien.', 'hard', 'Millionenstadt mitten im Amazonas-Regenwald.'),
+('Timbuktu', 16.7666, -3.0026, 'Stadt in Mali.', 'hard', 'Historische Oasenstadt am Rande der Sahara.'),
+('Astana', 51.1694, 71.4491, 'Hauptstadt von Kasachstan.', 'hard', 'Planstadt in der Steppe mit futuristischer Architektur.'),
+('Taschkent', 41.2995, 69.2401, 'Hauptstadt von Usbekistan.', 'hard', 'Wichtige Stadt an der alten Seidenstraße.'),
+('Sansibar-Stadt', -6.1659, 39.2026, 'Stadt in Tansania.', 'hard', 'Historische Stone Town auf einer Gewürzinsel.'),
+('Hobart', -42.8821, 147.3272, 'Stadt in Australien (Tasmanien).', 'hard', 'Hauptstadt der Insel Tasmanien.'),
+('Longyearbyen', 78.2232, 15.6267, 'Stadt auf Spitzbergen (Norwegen).', 'hard', 'Eine der nördlichsten Siedlungen der Welt.'),
+('Suva', -18.1248, 178.4501, 'Hauptstadt von Fidschi.', 'hard', 'Wichtiges Zentrum im Südpazifik.');
+
+
+CREATE TABLE countries (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    name_en VARCHAR(100) NOT NULL,
+    geom geometry(MultiPolygon, 4326),
+    latitude DOUBLE PRECISION NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL,
+    info TEXT,
+    difficulty VARCHAR(20) DEFAULT 'medium',
+    clue TEXT
+);
+
+INSERT INTO countries (name, name_en, latitude, longitude, info, difficulty, clue) VALUES
+('Deutschland', 'Germany', 51.17, 10.45, 'Industrie, Kultur und Geschichte.', 'easy', 'Zentraleuropäisches Land mit Autobahnen.'),
+('Frankreich', 'France', 46.23, 2.21, 'Beliebtestes Reiseziel der Welt.', 'easy', 'Eiffelturm und Baguette.'),
+('Italien', 'Italy', 41.87, 12.57, 'Antike, Küche und Kunst.', 'easy', 'Land in Stiefelform.'),
+('Spanien', 'Spain', 40.46, -3.75, 'Sonne, Kultur und Küste.', 'easy', 'Iberische Halbinsel.'),
+('Vereinigtes Königreich', 'United Kingdom', 55.38, -3.44, 'Inselstaat mit Monarchie.', 'easy', 'London, Big Ben, Tea Time.'),
+('Vereinigte Staaten von Amerika', 'United States of America', 37.09, -95.71, 'Wirtschafts- und Militärmacht.', 'easy', 'Hollywood und das Weiße Haus.'),
+('Kanada', 'Canada', 56.13, -106.35, 'Weite Natur und Seen.', 'easy', 'Ahornblatt-Flagge.'),
+('Brasilien', 'Brazil', -14.24, -51.93, 'Größtes Land Südamerikas.', 'easy', 'Amazonas und Karneval.'),
+('China', 'China', 35.86, 104.20, 'Sehr alte Hochkultur.', 'easy', 'Große Mauer.'),
+('Japan', 'Japan', 36.20, 138.25, 'Technologie trifft Tradition.', 'easy', 'Inselreich im Pazifik.'),
+('Australien', 'Australia', -25.27, 133.78, 'Kontinent und Staat.', 'easy', 'Kängurus und Outback.'),
+('Indien', 'India', 20.59, 78.96, 'Vielfältige Kulturen.', 'easy', 'Taj Mahal.'),
+('Russland', 'Russia', 61.52, 105.32, 'Größtes Land der Erde.', 'easy', 'Reicht von Europa bis Asien.'),
+('Ägypten', 'Egypt', 26.82, 30.80, 'Antikes Reich am Nil.', 'easy', 'Pyramiden von Gizeh.'),
+('Südafrika', 'South Africa', -30.56, 22.94, 'Vielfältige Landschaften.', 'easy', 'Drei Hauptstädte.'),
+('Mexiko', 'Mexico', 23.63, -102.55, 'Reiche Geschichte.', 'easy', 'Azteken und Tacos.'),
+('Türkei', 'Turkey', 38.96, 35.24, 'Brücke zwischen Kontinenten.', 'easy', 'Bosporus verbindet Welten.'),
+('Niederlande', 'Netherlands', 52.13, 5.29, 'Flaches Küstenland.', 'easy', 'Tulpen und Windmühlen.'),
+('Schweden', 'Sweden', 60.13, 18.64, 'Skandinavisches Königreich.', 'easy', 'IKEA und ABBA.'),
+('Schweiz', 'Switzerland', 46.82, 8.23, 'Neutrales Alpenland.', 'easy', 'Uhren und Schokolade.'),
+('Österreich', 'Austria', 47.52, 14.55, 'Alpenrepublik.', 'easy', 'Mozart und Wien.'),
+('Belgien', 'Belgium', 50.50, 4.47, 'EU-Zentrum.', 'easy', 'Waffeln und Pommes.'),
+('Polen', 'Poland', 51.92, 19.15, 'Mitteleuropäisches Land.', 'easy', 'Weichsel durchquert es.'),
+('Portugal', 'Portugal', 39.40, -8.22, 'Atlantikküste.', 'easy', 'Seefahrer-Nation.'),
+('Griechenland', 'Greece', 39.07, 21.82, 'Wiege der Demokratie.', 'easy', 'Antike Tempel.'),
+('Norwegen', 'Norway', 60.47, 8.47, 'Fjorde und Natur.', 'easy', 'Lange Küstenlinie.'),
+('Finnland', 'Finland', 61.92, 25.75, 'Tausend Seen.', 'easy', 'Land der Sauna.'),
+('Dänemark', 'Denmark', 56.26, 9.50, 'Skandinavisches Königreich.', 'easy', 'Kopenhagen und Hygge.'),
+('Irland', 'Ireland', 53.14, -7.69, 'Grüne Insel.', 'easy', 'Kleeblatt-Symbol.'),
+('Island', 'Iceland', 64.96, -19.02, 'Vulkanische Insel.', 'easy', 'Geysire und Nordlichter.'),
+('Tschechien', 'Czech Republic', 49.82, 15.47, 'Historisches Mitteleuropa.', 'easy', 'Prag liegt hier.'),
+('Ungarn', 'Hungary', 47.16, 19.50, 'Donau-Land.', 'easy', 'Budapest an der Donau.'),
+('Rumänien', 'Romania', 45.94, 24.97, 'Karpatenregion.', 'easy', 'Dracula-Legenden.'),
+('Bulgarien', 'Bulgaria', 42.73, 25.49, 'Balkanland.', 'easy', 'Schwarzmeerküste.'),
+('Kroatien', 'Croatia', 45.10, 15.20, 'Adriaküste.', 'easy', 'Viele Inseln.'),
+('Serbien', 'Serbia', 44.02, 21.01, 'Binnenstaat.', 'easy', 'Belgrad an Save und Donau.'),
+('Slowakei', 'Slovakia', 48.67, 19.70, 'Gebirgsland.', 'easy', 'Hohe Tatra.'),
+('Slowenien', 'Slovenia', 46.15, 14.99, 'Zwischen Alpen und Adria.', 'easy', 'Kleines grünes Land.'),
+('Litauen', 'Lithuania', 55.17, 23.88, 'Baltischer Staat.', 'easy', 'Vilnius ist Hauptstadt.'),
+('Lettland', 'Latvia', 56.88, 24.60, 'Ostseestaat.', 'easy', 'Riga liegt hier.'),
+('Estland', 'Estonia', 58.60, 25.01, 'Digitales Vorzeigeland.', 'easy', 'E-Government-Pionier.'),
+('Ukraine', 'Ukraine', 48.38, 31.17, 'Großes osteuropäisches Land.', 'easy', 'Kornkammer Europas.'),
+('Weißrussland', 'Belarus', 53.71, 27.95, 'Osteuropäischer Staat.', 'easy', 'Grenzt an Russland.'),
+('Neuseeland', 'New Zealand', -40.90, 174.89, 'Inselstaat.', 'easy', 'Herr der Ringe Landschaft.'),
+('Argentinien', 'Argentina', -38.42, -63.62, 'Großes Land im Süden Südamerikas.', 'medium', 'Tango, Pampas und Patagonien.'),
+('Chile', 'Chile', -35.68, -71.54, 'Sehr langgestrecktes Land.', 'medium', 'Zwischen Anden und Pazifik.'),
+('Kolumbien', 'Colombia', 4.57, -74.30, 'Biodiverses südamerikanisches Land.', 'medium', 'Berühmt für Kaffee.'),
+('Peru', 'Peru', -9.19, -75.02, 'Andenstaat mit alter Hochkultur.', 'medium', 'Machu Picchu liegt hier.'),
+('Venezuela', 'Venezuela', 6.42, -66.59, 'Rohstoffreiches Land.', 'medium', 'Höchster Wasserfall der Welt.'),
+('Bolivien', 'Bolivia', -16.29, -63.59, 'Binnenstaat in Südamerika.', 'medium', 'Titicacasee liegt hier.'),
+('Paraguay', 'Paraguay', -23.44, -58.44, 'Binnenstaat in Südamerika.', 'medium', 'Zwischen Brasilien und Argentinien.'),
+('Uruguay', 'Uruguay', -32.52, -55.77, 'Kleines südamerikanisches Land.', 'medium', 'Liegt zwischen Argentinien und Brasilien.'),
+('Marokko', 'Morocco', 31.79, -7.09, 'Nordafrikanisches Königreich.', 'medium', 'Atlasgebirge und Sahara.'),
+('Algerien', 'Algeria', 28.03, 1.66, 'Größtes Land Afrikas.', 'medium', 'Große Teile sind Wüste.'),
+('Tunesien', 'Tunisia', 33.89, 9.56, 'Kleines Land in Nordafrika.', 'medium', 'Antikes Karthago.'),
+('Libyen', 'Libya', 26.34, 17.23, 'Nordafrikanischer Wüstenstaat.', 'medium', 'Fast vollständig Sahara.'),
+('Äthiopien', 'Ethiopia', 9.15, 40.49, 'Sehr altes Kaiserreich.', 'medium', 'Nie offiziell kolonisiert.'),
+('Kenia', 'Kenya', -0.02, 37.91, 'Ostafrikanisches Land.', 'medium', 'Bekannt für Safaris.'),
+('Tansania', 'Tanzania', -6.37, 34.89, 'Großes Land in Ostafrika.', 'medium', 'Kilimandscharo liegt hier.'),
+('Ghana', 'Ghana', 7.95, -1.02, 'Stabiles westafrikanisches Land.', 'medium', 'Goldküste Afrikas.'),
+('Nigeria', 'Nigeria', 9.08, 8.68, 'Bevölkerungsreichstes Land Afrikas.', 'medium', 'Lagos ist eine Megastadt.'),
+('Angola', 'Angola', -11.20, 17.87, 'Südwestafrikanischer Staat.', 'medium', 'Reich an Bodenschätzen.'),
+('Mosambik', 'Mozambique', -18.67, 35.53, 'Küstenstaat im Südosten Afrikas.', 'medium', 'Lange Küste am Indischen Ozean.'),
+('Iran', 'Iran', 32.43, 53.69, 'Großes Land im Nahen Osten.', 'medium', 'Ehemals Persien.'),
+('Irak', 'Iraq', 33.22, 43.68, 'Historische Region Mesopotamien.', 'medium', 'Zwischen Euphrat und Tigris.'),
+('Saudi-Arabien', 'Saudi Arabia', 23.89, 45.08, 'Großes Wüstenkönigreich.', 'medium', 'Heilige Städte des Islam.'),
+('Israel', 'Israel', 31.05, 34.85, 'Kleiner Staat im Nahen Osten.', 'medium', 'Religiös sehr bedeutend.'),
+('Thailand', 'Thailand', 15.87, 100.99, 'Beliebtes Reiseziel in Südostasien.', 'medium', 'Bangkok und Traumstrände.'),
+('Vietnam', 'Vietnam', 14.06, 108.28, 'Langgestrecktes Land in Südostasien.', 'medium', 'Bekannt für Reisterrassen.'),
+('Malaysia', 'Malaysia', 4.21, 101.98, 'Geteilter Staat in Südostasien.', 'medium', 'Regenwald und Metropolen.'),
+('Indonesien', 'Indonesia', -0.79, 113.92, 'Größter Inselstaat der Welt.', 'medium', 'Liegt auf dem Feuerring.'),
+('Philippinen', 'Philippines', 12.88, 121.77, 'Großer Inselstaat.', 'medium', 'Über 7.000 Inseln.'),
+('Kasachstan', 'Kazakhstan', 48.02, 66.92, 'Größter Binnenstaat.', 'medium', 'Liegt zwischen Europa und Asien.'),
+('Usbekistan', 'Uzbekistan', 41.38, 64.59, 'Zentralasiatischer Staat.', 'medium', 'Alte Seidenstraßenstädte.'),
+('Neuseeland', 'New Zealand', -40.90, 174.89, 'Inselstaat im Südpazifik.', 'medium', 'Drehort von Herr der Ringe.'),
+('Luxemburg', 'Luxembourg', 49.82, 6.13, 'Sehr kleines, wohlhabendes Land.', 'hard', 'Eines der kleinsten Länder Europas.'),
+('Malta', 'Malta', 35.94, 14.38, 'Kleiner Inselstaat im Mittelmeer.', 'hard', 'Südlich von Italien gelegen.'),
+('Zypern', 'Cyprus', 35.13, 33.43, 'Geteilte Insel im Mittelmeer.', 'hard', 'Nördlicher Teil international nicht anerkannt.'),
+('Andorra', 'Andorra', 42.55, 1.58, 'Kleiner Staat in den Pyrenäen.', 'hard', 'Liegt zwischen Frankreich und Spanien.'),
+('Liechtenstein', 'Liechtenstein', 47.17, 9.56, 'Sehr kleiner Alpenstaat.', 'hard', 'Zwischen Schweiz und Österreich.'),
+('Monaco', 'Monaco', 43.74, 7.42, 'Stadtstaat an der Côte d’Azur.', 'hard', 'Berühmt für Formel 1.'),
+('San Marino', 'San Marino', 43.94, 12.46, 'Kleiner Binnenstaat.', 'hard', 'Liegt vollständig in Italien.'),
+('Vatikanstadt', 'Vatican City', 41.90, 12.45, 'Kleinster Staat der Welt.', 'hard', 'Sitz des Papstes.'),
+('Gambia', 'Gambia', 13.44, -15.31, 'Sehr schmales Land in Westafrika.', 'hard', 'Folgt fast vollständig einem Fluss.'),
+('Benin', 'Benin', 9.31, 2.32, 'Westafrikanischer Staat.', 'hard', 'Früher Königreich Dahomey.'),
+('Togo', 'Togo', 8.62, 0.82, 'Schmales Land in Westafrika.', 'hard', 'Liegt zwischen Ghana und Benin.'),
+('Burkina Faso', 'Burkina Faso', 12.24, -1.56, 'Binnenstaat in Westafrika.', 'hard', 'Früher Obervolta.'),
+('Niger', 'Niger', 17.61, 8.08, 'Großes Wüstenland.', 'hard', 'Nicht zu verwechseln mit Nigeria.'),
+('Tschad', 'Chad', 15.45, 18.73, 'Binnenstaat in Zentralafrika.', 'hard', 'Hat keinen Zugang zum Meer.'),
+('Zentralafrikanische Republik', 'Central African Republic', 6.61, 20.94, 'Staat in Zentralafrika.', 'hard', 'Sehr geringe Bevölkerungsdichte.'),
+('Äquatorialguinea', 'Equatorial Guinea', 1.65, 10.27, 'Kleiner Staat mit Festland und Inseln.', 'hard', 'Spanischsprachig in Afrika.'),
+('Gabun', 'Gabon', -0.80, 11.61, 'Waldreiches Land.', 'hard', 'Liegt am Äquator.'),
+('Sao Tomé und Príncipe', 'Sao Tome and Principe', 0.19, 6.61, 'Kleiner Inselstaat.', 'hard', 'Im Golf von Guinea.'),
+('Komoren', 'Comoros', -11.88, 43.87, 'Inselstaat im Indischen Ozean.', 'hard', 'Zwischen Afrika und Madagaskar.'),
+('Dschibuti', 'Djibouti', 11.83, 42.59, 'Kleiner Staat am Horn von Afrika.', 'hard', 'Wichtiger Hafenstaat.'),
+('Eritrea', 'Eritrea', 15.18, 39.78, 'Staat am Roten Meer.', 'hard', 'Grenzt an Äthiopien.'),
+('Bhutan', 'Bhutan', 27.51, 90.43, 'Himalaya-Königreich.', 'hard', 'Misst Wohlstand als Glück.'),
+('Nepal', 'Nepal', 28.39, 84.12, 'Gebirgsstaat im Himalaya.', 'hard', 'Mount Everest liegt hier.'),
+('Bangladesch', 'Bangladesh', 23.69, 90.36, 'Sehr dicht besiedelt.', 'hard', 'Großes Flussdelta.'),
+('Sri Lanka', 'Sri Lanka', 7.87, 80.77, 'Inselstaat südlich von Indien.', 'hard', 'Früher Ceylon.'),
+('Laos', 'Laos', 19.86, 102.50, 'Binnenstaat in Südostasien.', 'hard', 'Liegt am Mekong.'),
+('Kambodscha', 'Cambodia', 12.57, 104.99, 'Südostasiatischer Staat.', 'hard', 'Tempelanlage Angkor Wat.'),
+('Mongolei', 'Mongolia', 46.86, 103.84, 'Dünn besiedeltes Land.', 'hard', 'Zwischen Russland und China.'),
+('Armenien', 'Armenia', 40.07, 45.04, 'Kleiner Kaukasus-Staat.', 'hard', 'Sehr frühes christliches Land.'),
+('Georgien', 'Georgia', 42.32, 43.36, 'Land im Kaukasus.', 'hard', 'Liegt zwischen Schwarzem Meer und Kaukasus.'),
+('Aserbaidschan', 'Azerbaijan', 40.14, 47.58, 'Kaukasus-Staat.', 'hard', 'Reich an Erdöl.'),
+('Suriname', 'Suriname', 3.92, -56.03, 'Kleines Land in Südamerika.', 'hard', 'Ehemals niederländische Kolonie.'),
+('Guyana', 'Guyana', 4.86, -58.93, 'Englischsprachiges Land in Südamerika.', 'hard', 'Liegt nördlich von Brasilien.'),
+('Belize', 'Belize', 17.19, -88.50, 'Kleines Land in Mittelamerika.', 'hard', 'Einziger englischsprachiger Staat dort.'),
+('El Salvador', 'El Salvador', 13.79, -88.90, 'Kleinstaat in Mittelamerika.', 'hard', 'Sehr dicht besiedelt.'),
+('Honduras', 'Honduras', 14.82, -86.63, 'Mittelamerikanischer Staat.', 'hard', 'Karibik- und Pazifikküste.'),
+('Kiribati', 'Kiribati', 1.87, -157.36, 'Weit verstreuter Inselstaat.', 'hard', 'Liegt über mehrere Zeitzonen.'),
+('Nauru', 'Nauru', -0.52, 166.93, 'Sehr kleiner Inselstaat.', 'hard', 'Einer der kleinsten Staaten der Welt.'),
+('Tuvalu', 'Tuvalu', -7.11, 177.65, 'Winziger Inselstaat.', 'hard', 'Stark vom Klimawandel bedroht.'),
+('Marshallinseln', 'Marshall Islands', 7.13, 171.18, 'Inselstaat im Pazifik.', 'hard', 'Besteht aus Atollen.'),
+('Mikronesien', 'Micronesia', 7.43, 150.55, 'Inselstaat mit vielen Inseln.', 'hard', 'Liegt im westlichen Pazifik.');
+
+CREATE TEMP TABLE countries_staging (
+    name_en_csv TEXT,
+    wkt_geometry TEXT
+);
+
+COPY countries_staging(name_en_csv, wkt_geometry)
+FROM 'Pfad zu countries_import.csv'
+DELIMITER ';' 
+CSV HEADER;
+
+UPDATE countries
+SET geom = ST_Multi(ST_GeomFromText(staging.wkt_geometry, 4326))
+FROM countries_staging AS staging
+WHERE countries.name_en = staging.name_en_csv;
+
+DELETE FROM countries WHERE geom IS NULL;
+
+CREATE TABLE berge (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    latitude DECIMAL(10,6),
+    longitude DECIMAL(10,6),
+    hoehe INTEGER,
+    info TEXT,
+    difficulty VARCHAR(20) CHECK (difficulty IN ('easy', 'medium', 'hard')),
+    clue TEXT
+);
+INSERT INTO berge (name, latitude, longitude, hoehe, info, difficulty, clue) VALUES
+('Mount Everest', 27.988056, 86.925278, 8848, 'Höchster Berg der Erde an der Grenze Nepal–China.', 'easy', 'Der höchste Gipfel der Welt.'),
+('Mount Fuji', 35.360556, 138.727778, 3776, 'Ikonischer Vulkan Japans und Nationalheiligtum.', 'easy', 'Berühmt für seine perfekte Kegelform.'),
+('Matterhorn', 45.976300, 7.658600, 4478, 'Einer der markantesten Berge der Alpen.', 'easy', 'Pyramidenförmiger Gipfel, Wahrzeichen der Schweiz.'),
+('Kilimandscharo', -3.067424, 37.355627, 5895, 'Höchster freistehender Berg der Welt.', 'easy', 'Schnee am Äquator – einzigartig.'),
+('Mont Blanc', 45.832622, 6.865200, 4807, 'Höchster Berg der Alpen.', 'easy', 'Grenzt an Frankreich und Italien.'),
+('Zugspitze', 47.4210, 10.9840, 2962, 'Höchster Berg Deutschlands.', 'easy', 'Bietet Panoramasichten auf vier Länder.'),
+('Mount Whitney', 36.578581, -118.291994, 4421, 'Höchster Berg der USA außerhalb Alaskas.', 'easy', 'Endpunkt des berühmten John Muir Trails.'),
+('Teide', 28.2724, -16.6425, 3715, 'Höchster Punkt Spaniens auf Teneriffa.', 'easy', 'Ein Vulkan, der über Wolken ragt.'),
+('Pico', 38.4680, -28.3720, 2351, 'Höchster Berg Portugals auf den Azoren.', 'easy', 'Markanter Vulkan mitten im Atlantik.'),
+('Olymp', 40.0856, 22.3580, 2918, 'Höchster Berg Griechenlands.', 'easy', 'Wohnsitz der griechischen Götter.');
+
+
+INSERT INTO berge (name, latitude, longitude, hoehe, info, difficulty, clue) VALUES
+('Grossglockner', 47.074722, 12.693333, 3798, 'Höchster Berg Österreichs.', 'medium', 'Liegt in den Hohen Tauern.'),
+('Denali', 63.069500, -151.006000, 6190, 'Höchster Berg Nordamerikas.', 'medium', 'Früher Mount McKinley genannt.'),
+('Pico de Orizaba', 19.029000, -97.268100, 5636, 'Höchster Berg Mexikos und Vulkan.', 'medium', 'Dritthöchster in Nordamerika.'),
+('Mount Elbrus', 43.349900, 42.445300, 5642, 'Höchster Berg Europas (geografisch).', 'medium', 'Doppelkuppe im Kaukasus.'),
+('Ben Nevis', 56.796850, -5.003508, 1345, 'Höchster Berg des Vereinigten Königreichs.', 'medium', 'Liegt in den Grampian Mountains.'),
+('Mount Ararat', 39.7025, 44.3013, 5137, 'Biblischer Berg, Nationalheiligtum Armeniens.', 'medium', 'Hier soll die Arche Noah gelandet sein.'),
+('Aconcagua', -32.6532, -70.0109, 6961, 'Höchster Berg Südamerikas.', 'medium', 'Der höchste außerhalb Asiens.'),
+('Mount Rainier', 46.8523, -121.7603, 4392, 'Aktiver Vulkan nahe Seattle.', 'medium', 'Bekannt für riesige Gletscherflächen.'),
+('Eiger', 46.5775, 8.0050, 3970, 'Berühmt für die Eiger-Nordwand.', 'medium', 'Eine der anspruchsvollsten Wände Europas.'),
+('Gran Paradiso', 45.5060, 7.2730, 4061, 'Einziger völlig italienischer Viertausender.', 'medium', 'Beliebt bei Alpinisten, gute Einsteigertour.');
+
+INSERT INTO berge (name, latitude, longitude, hoehe, info, difficulty, clue) VALUES
+('Nanda Devi', 30.375000, 79.970000, 7816, 'Zweithöchster Berg Indiens, schwer zugänglich.', 'hard', 'Im Schutzgebiet, sehr abgeschieden.'),
+('Puncak Jaya', -4.082000, 137.183000, 4884, 'Höchster Berg Ozeaniens nach Seven Summits.', 'hard', 'Liegt in Papua, extrem schwer erreichbar.'),
+('Mount Kenia', -0.152140, 37.308364, 5199, 'Zweithöchster Berg Afrikas.', 'hard', 'Alter Vulkan, technisch anspruchsvoll.'),
+('Dykh-Tau', 43.050000, 43.130000, 5205, 'Zweithöchster Berg des Kaukasus.', 'hard', 'Bekannt für steile, gefährliche Routen.'),
+('Gannett Peak', 43.184000, -109.654000, 4207, 'Höchster Berg Wyomings, sehr abgeschieden.', 'hard', 'Langer Zustieg über Gletscher.'),
+('K2', 35.8808, 76.5158, 8611, 'Zweithöchster Berg der Erde, extrem gefährlich.', 'hard', 'Bekannt als „Savage Mountain“.'),
+('Annapurna I', 28.5950, 83.8203, 8091, 'Berüchtigte Todesrate, sehr schwer.', 'hard', 'Einer der gefährlichsten Achttausender.'),
+('Makalu', 27.8860, 87.0899, 8485, 'Fünfhöchster Berg der Erde.', 'hard', 'Pyramidenförmig, brutal anspruchsvoll.'),
+('Nanga Parbat', 35.2370, 74.5890, 8126, 'Der „Schicksalsberg“, extrem tödlich.', 'hard', 'Steile Rupalwand – über 4000 m hoch.'),
+('Baintha Brakk (Ogre I)', 36.2100, 75.8280, 7285, 'Einer der schwierigsten Berge weltweit.', 'hard', 'Kaum erfolgreiche Besteigungen.');
+
+--Gebäude
+CREATE TABLE gebaeude (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    latitude DECIMAL(10,6),
+    longitude DECIMAL(10,6),
+    hoehe INTEGER,
+    info TEXT,
+    difficulty VARCHAR(20) CHECK (difficulty IN ('easy', 'medium', 'hard')),
+    clue TEXT
+);
+INSERT INTO gebaeude (name, latitude, longitude, hoehe, info, difficulty, clue) VALUES
+('Eiffelturm', 48.858370, 2.294481, 324, 'Weltberühmtes Wahrzeichen von Paris, 1889 erbaut.', 'easy', 'Eines der meistbesuchten Monumente der Welt.'),
+('Burj Khalifa', 25.197197, 55.274376, 828, 'Höchstes Gebäude der Welt seit 2010.', 'easy', 'Ragt über die Skyline von Dubai hinaus.'),
+('Empire State Building', 40.748817, -73.985428, 381, 'Ikonischer Wolkenkratzer in New York, 1931 eröffnet.', 'easy', 'Berühmt aus zahlreichen Filmen.'),
+('Sydney Opera House', -33.856784, 151.215297, 65, 'Architektonisches Meisterwerk und UNESCO-Welterbe.', 'easy', 'Berühmt für seine segelförmigen Dächer.'),
+('Colosseum', 41.890251, 12.492373, 48, 'Antikes Amphitheater in Rom, Symbol des Römischen Reiches.', 'easy', 'Eines der sieben neuen Weltwunder.'),
+('Big Ben / Elizabeth Tower', 51.500729, -0.124625, 96, 'Berühmter Glockenturm des Palace of Westminster.', 'easy', 'Klingt jedes Jahr zu Silvester weltweit im TV.'),
+('Brandenburger Tor', 52.516275, 13.377704, 26, 'Berühmtestes Wahrzeichen Berlins.', 'easy', 'Symbol der Deutschen Einheit.'),
+('Sagrada Família', 41.403629, 2.174356, 172, 'Unvollendete Basilika von Antoni Gaudí in Barcelona.', 'easy', 'Bau läuft seit über 140 Jahren.'),
+('Taj Mahal', 27.175015, 78.042155, 73, 'Mausoleum aus weißem Marmor in Indien.', 'easy', 'Ein Symbol ewiger Liebe.'),
+('Christusstatue (Rio)', -22.951916, -43.210487, 38, 'Berühmte Christusstatue über Rio de Janeiro.', 'easy', 'Mit ausgebreiteten Armen über der Stadt.');
+
+INSERT INTO gebaeude (name, latitude, longitude, hoehe, info, difficulty, clue) VALUES
+('The Shard', 51.504500, -0.086500, 310, 'Höchstes Gebäude des Vereinigten Königreichs.', 'medium', 'Spitz zulaufender Wolkenkratzer in London.'),
+('Petronas Towers', 3.157900, 101.711400, 452, 'Zwillingstürme in Kuala Lumpur, bis 2004 höchste Gebäude der Welt.', 'medium', 'Berühmt für ihre Skybridge.'),
+('Turning Torso', 55.607500, 12.972000, 190, 'Architektonisch verdrehtes Hochhaus in Malmö.', 'medium', 'Von Santiago Calatrava entworfen.'),
+('Taipei 101', 25.033968, 121.564468, 508, 'Ehemals höchstes Gebäude der Welt (bis 2010).', 'medium', 'Hat einen gewaltigen Schwingungsdämpfer im Inneren.'),
+('One World Trade Center', 40.713000, -74.013200, 541, 'Höchstes Gebäude der USA, erbaut nach 9/11.', 'medium', 'Auch „Freedom Tower“ genannt.'),
+('Willis Tower (Sears Tower)', 41.878876, -87.635915, 442, 'Ehemals höchstes Gebäude der Welt (1974–1998).', 'medium', 'Skydeck mit Glasboden in Chicago.'),
+('Gherkin (30 St Mary Axe)', 51.514463, -0.080245, 180, 'Berühmtes Londoner Bürogebäude.', 'medium', 'Wegen seiner Form „Gurke“ genannt.'),
+('Marina Bay Sands', 1.2834, 103.8607, 200, 'Hotelkomplex in Singapur mit ikonischem SkyPark.', 'medium', 'Infinity Pool auf dem Dach.'),
+('Lotte World Tower', 37.5126, 127.1026, 555, 'Zweithöchstes Gebäude Asiens außerhalb des Nahen Ostens.', 'medium', 'Südkoreas Rekordwolkenkratzer.'),
+('Palace of Culture and Science', 52.2318, 21.0064, 237, 'Eines der höchsten Gebäude Polens.', 'medium', 'Stalinistische Architektur im Zentrum Warschaus.');
+
+INSERT INTO gebaeude (name, latitude, longitude, hoehe, info, difficulty, clue) VALUES
+('Cayan Tower', 25.085300, 55.144000, 306, 'Verdrehter Wolkenkratzer in Dubai Marina.', 'hard', 'Dreht sich um 90 Grad über die Höhe.'),
+('Lakhta Center', 59.987000, 30.177000, 462, 'Höchstes Gebäude Europas seit 2019.', 'hard', 'Schlankes, nadelförmiges Design.'),
+('Makkah Royal Clock Tower', 21.418000, 39.825600, 601, 'Eines der höchsten Gebäude der Welt.', 'hard', 'Besitzt die größte Uhr der Welt.'),
+('Torre Reforma', 19.426000, -99.167000, 246, 'Erdbebensicherer Wolkenkratzer in Mexiko-Stadt.', 'hard', 'Bekannt für seine dreieckige Form.'),
+('Tour First', 48.897500, 2.240900, 231, 'Höchstes Bürogebäude Frankreichs (La Défense).', 'hard', 'Moderne Glasfassade im Geschäftsviertel.'),
+('Shanghai Tower', 31.2346, 121.5064, 632, 'Zweithöchstes Gebäude der Welt.', 'hard', 'Spiralform für geringeren Winddruck.'),
+('Abraj Al Bait Zamzam Tower', 21.41815, 39.82620, 601, 'Teil des gigantischen Baukomplexes in Mekka.', 'hard', 'Extrem markante Silhouette.'),
+('Ping An Finance Center', 22.5333, 114.0550, 599, 'Höchstgelegenes Büro in Shenzhen.', 'hard', 'Mit Antenne über 650 m.'),
+('Goldin Finance 117', 39.0938, 117.2246, 597, 'Fishtail-förmiger Supertall in Tianjin.', 'hard', 'Lange unvollendet – trotzdem riesig.'),
+('Jeddah Tower (im Bau)', 21.7120, 39.1030, 1008, 'Soll das erste 1-km-Gebäude der Welt werden.', 'hard', 'Der erste geplante „Kilometer-Turm“.');
