@@ -255,18 +255,18 @@ if st.session_state.game_started:
         case "Leicht":
             # CartoDB PositronNoLabels: Klare politische Grenzen, grau, keine Namen
             map_tiles = "CartoDB VoyagerNoLabels"
-            map_attr = '&copy; OpenStreetMap & CartoDB'
+            map_attr = '&copy; OpenStreetMap & CartoDB; Länderpolygone: Natural Earth 1:110m Cultural Vectors. Admin o - Countries.'
     
         case "Mittel":
             # Esri World Physical: Physische Karte (betont Kontinente/Gebirge), 
             # keine politischen Ländergrenzen, keine Namen
             map_tiles = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}"
-            map_attr = 'Tiles &copy; Esri &mdash; Source: Esri'
+            map_attr = 'Tiles &copy; Esri &mdash; Source: Esri; Länderpolygone: Natural Earth 1:110m Cultural Vectors. Admin o - Countries.'
             
         case "Schwer": # Schwer
             # Esri WorldImagery: Satellitenbild, keine Grenzen, keine Namen
             map_tiles = "Esri.WorldImagery"
-            map_attr = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+            map_attr = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community; Länderpolygone: Natural Earth 1:110m Cultural Vectors. Admin o - Countries.'
 
     # Karte initialisieren 
     m = folium.Map(
